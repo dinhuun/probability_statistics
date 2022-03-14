@@ -1,0 +1,11 @@
+*.egg-info
+*.pyc
+build
+dist
+env
+pip-wheel-metadata
+.coverage*
+.eggs
+.mypy_cache
+.pytest_cache
+!notebooks
