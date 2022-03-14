@@ -1,0 +1,297 @@
+\documentclass[14pt, reqno]{amsart}
+
+\usepackage{amsmath, amssymb, bm, amsrefs}
+\usepackage{diagrams}
+\usepackage{enumerate}
+\usepackage{extsizes}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+
+\setlength{\textwidth}{16cm} \setlength{\textheight}{22cm}
+\setlength{\oddsidemargin}{0cm} \setlength{\topmargin}{0cm}
+\setlength{\evensidemargin}{0cm} \setlength{\topmargin}{0cm}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{dfn}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{question}[theorem]{Question}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{An example of conjugate priors}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+Dinh Huu Nguyen, 10/15/2020
+\end{center}
+\vspace{20pt}
+
+Abstract: an example of conjugate priors in Bayesian modeling.
+
+\tableofcontents
+
+\section{Overview}
+\begin{itemize}
+\item suppose you have a dataset of $n$ observations $x_1, \dots, x_n$
+\item suppose you have chosen to model them as observations from a distribution $X(\Theta)$ with some parameter $\Theta$
+\end{itemize}
+\vspace{10pt}
+
+\textbf{Question}: how to choose $\Theta$?
+\vspace{10pt}
+
+\textbf{Answer}: depends on approach.
+\vfill
+\pagebreak
+
+\subsection{Randomist approach} Treat $\Theta$ as a number $\theta$ and pick a random one.
+\vfill
+\pagebreak
+
+\subsection{Frequentist approach} Treat $\Theta$ as a number $\theta$ and find one that does something. A popular target is $\theta$ that maximizes the likelihood of observing $x_1, \dots, x_n$. Such $\theta$ is called the maximum likelihood estimate.
+\vfill
+\pagebreak
+
+\subsection{Bayesian approach} Treat $\Theta$ as a distribution $\Theta(\alpha)$ with some parameter $\alpha$ and update $\alpha$ to $x_1, \dots, x_n$ via Bayes' theorem
+\vspace{10pt}
+\begin{equation}\label{bayes_theorem}
+p_{\Theta \,|\, \alpha, x_1, \dots, x_n}(\theta) = \frac{p_{X \,|\, \Theta}(x_1, \dots, x_n) p_{\Theta}(\theta)}{p_X(x_1, \dots, x_n)}
+\end{equation}
+\vspace{10pt}
+\begin{itemize}
+\item $p_X(x_1, \dots, x_n)$ is called the evidence
+\item $p_{X \,|\, \Theta}(x_1, \dots, x_n)$ is called the likelihood
+\item $ p_{\Theta}(\theta)$ is called the prior probability
+\item $p_{\Theta \,|\, x_1, \dots, x_n}(\theta)$ is called the posterior probability
+\end{itemize}
+\vspace{20pt}
+
+After having chosen model $X(\Theta)$ above, people often choose $\Theta(\alpha)$ in some family $\mathcal{F}$ of distributions so that
+\begin{enumerate}[1.]
+\item \label{evidence_tractable} the evidence $p_X(x) = \int p_{X \,|\, \Theta}(x) p_{\Theta}(\theta) d \theta$ is tractable
+\item \label{predictive_probability_tractable} the predictive probability $p_{X \,|\, \Theta, x_1, \dots, x_n} (x) = \int p_{X \,|\, \Theta}(x) p_{\Theta \,|\, x_1, \dots, x_n}(\theta) d \theta$ is tractable
+\item \label{posterior_in_same_family} the posterior distribution $\Theta \,|\, x_1, \dots, x_n$ is also in $\mathcal{F}$. Hence the name ``conjugate priors".
+\end{enumerate}
+\vfill
+\pagebreak
+
+Goals \ref{evidence_tractable}, \ref{predictive_probability_tractable} and goal \ref{posterior_in_same_family} pose a dilemma:
+\begin{itemize}
+\item if we choose $\Theta$ to be in the family $\mathcal{C}$ of all constant distributions then integrals are easy to compute but $\Theta \,|\, x_1, \dots, x_n$ likely will not be in $\mathcal{C}$.
+\item if we choose $\Theta$ to be in the family $\mathcal{A}$ of all distributions then $\Theta \,|\, x_1, \dots, x_n$ surely is in $\mathcal{A}$ but integrals are hard to compute
+\end{itemize}
+\vspace{20pt}
+
+However, if $X$ is an exponential distribution and $\Theta$ is chosen to be in the family $\mathcal{E}$ of all exponential distributions then this dilemma is solved:
+\begin{itemize} 
+\item product of two exponential distributions is another exponential distribution $e^a e^b = e^{a + b}$
+\item integrals of exponentials $\int e^a$ are tractable
+\end{itemize}
+\vfill
+\pagebreak
+
+\section{Examples}
+
+\vspace{20pt}
+\subsection{Bernoulli likelihood}
+\begin{itemize}
+\item suppose you have a dataset of $n$ observations $x_1 = 0, x_2 = 1, x_3 = 1, \dots, x_n = 0$
+\item suppose you have chosen to model them as observations from a Bernoulli distribution $X(\Theta)$ with some parameter $\Theta$ and probability mass function
+\end{itemize}
+\begin{equation}\label{bernoulli_pmf}
+\begin{split}
+p_{X \,|\, \Theta}(1) & = \Theta \\
+\\
+p_{X \,|\, \Theta}(0) & = 1 - \Theta \\
+\\
+p_{X \,|\, \Theta}(x) & = \Theta^x (1 - \Theta)^{1 - x} \\
+\end{split}
+\end{equation}
+\vspace{20pt}
+
+If we assume $x_1, \dots, x_n$ are independent then the likelihood in \eqref{bayes_theorem} is
+\begin{equation}
+\begin{split}
+p_{X \,|\, \Theta}(x_1, \dots, x_n) & = \prod \limits _{i=1}^n p_{X \,|\, \Theta}(x_i) \\
+\\
+ & = \prod \limits _{i=1}^n \Theta^{x_i} (1 - \Theta)^{1 - x_i} \\
+\end{split}
+\end{equation}
+\vfill
+\pagebreak
+
+\subsubsection{Randomist approach} Treat $\Theta$ as a number $\theta$ and pick $\theta = 0.5$.
+\vfill
+\pagebreak
+
+\subsubsection{Frequentist approach} Treat $\Theta$ as a number $\theta$ and find one that maximizes above likelihood
+\vspace{10pt}
+$$p_{X \,|\, \theta}(x_1, \dots, x_n) = \prod \limits _{i=1}^n \theta^{x_i} (1 - \theta)^{1 - x_i}$$
+\vspace{10pt}
+or equivalently maximizes log of above likelihood
+\begin{align*}
+L(\theta) & = log(p_{X \,|\, \theta}(x_1, \dots, x_n)) \\
+& = log(\prod \limits _{i=1}^n \theta^{x_i} (1 - \theta)^{1 - x_i}) \\
+& = \sum \limits _{i=1}^n log(\theta^{x_i} (1 - \theta)^{1 - x_i}) \\ & = \sum \limits _{i=1}^n log(\theta^{x_i}) + \sum \limits _{i=1}^n log((1 - \theta)^{1- x_i}) \\
+& = \sum \limits _{i=1}^n x_i log(\theta) + \sum \limits _{i=1}^n (1- x_i) log(1 - \theta) \\
+ & = log(\theta) \sum \limits _{i=1}^n x_i + log(1 - \theta) n - log(1 - \theta) \sum \limits _{i=1}^n x_i \\
+\\
+L'(\theta) & = \frac{1}{\theta} \sum \limits _{i=1}^n x_i - \frac{n}{1 - \theta} + \frac{1}{1 - \theta} \sum \limits _{i=1}^n x_i \\
+ & = \frac{\sum \limits _{i=1}^n x_i - n \theta}{\theta(1 - \theta)} \\
+\end{align*}
+
+It follows that $L'(\theta)$ is $0$ and $L(\theta)$ is maximum when $\theta$ is $\frac{\sum \limits _{i=1}^n x_i}{n}$. This $\theta$ is called the maximum likelihood estimate.
+\vfill
+\pagebreak
+
+Prediction of observations is simple
+\vspace{10pt}
+\begin{align*}
+p_{X \,|\, \theta}(1) & = \theta \\
+ & = \frac{\sum \limits _{i=1}^n x_i}{n} \\
+\\
+p_{X \,|\, \theta}(0) & = 1 - \theta \\
+ & = 1 - \frac{\sum \limits _{i=1}^n x_i}{n}\\
+\end{align*}
+\vfill
+\pagebreak
+
+\subsubsection{Bayesian approach} Treat $\Theta(\alpha_1, \alpha_2)$ as a distribution with some parameters $\alpha_1, \alpha_2$ and probability density function
+\vspace{10pt}
+$$p_{\Theta}(\theta) \propto \theta^{\alpha_1}(1 - \theta)^{\alpha_2}$$
+\vspace{10pt}
+\noindent
+and update $\alpha_1, \alpha_2$ to $x_1, \dots, x_n$ via Bayes' theorem \ref{bayes_theorem}.
+\vspace{20pt}
+
+That $p_{\Theta}$ looks like $p_{X \,|\, \Theta}$ is by choice.
+\vspace{20pt}
+
+And after a change of variables $\alpha_1 = \beta_1 - 1, \alpha_2 = \beta_2 - 1$ and normalization
+\vspace{10pt}
+\begin{equation}\label{prior_beta_pdf}
+p_{\Theta}(\theta) = \frac{\theta^{\beta_1 - 1} (1 - \theta)^{\beta_2 - 1}}{B(\beta_1, \beta_2)}
+\end{equation}
+\vspace{10pt}
+
+\noindent
+where normalizing factor $B(\beta_1, \beta_2) = \frac{\Gamma(\beta_1) \Gamma(\beta_2)}{\Gamma(\beta_1 + \beta_2)}$ is the beta function and $\Gamma$ is the gamma function, we recognize that this choice $\Theta$ is the beta distribution $Beta(\beta_1, \beta_2)$ with mean and variance
+\vspace{10pt}
+\begin{align*}
+E(\Theta) & = \frac{\beta_1}{\beta_1 + \beta_2} \\
+\\
+var(\Theta) & = \frac{\beta_1 \beta_2}{(\beta_1 + \beta_2 + 1)(\beta_1 + \beta_2)^2} \\
+\end{align*}
+\vfill
+\pagebreak
+
+Now we are ready to update $\beta_1, \beta_2$ with $x_1, \dots, x_n$ via \eqref{bayes_theorem} using \eqref{bernoulli_pmf} and \eqref{prior_beta_pdf}
+\vspace{10pt}
+\begin{align*}
+p_{\Theta \,|\, x_1, \dots, x_n}(\theta) & \propto p_{X \,|\, \Theta}(x_1, \dots, x_n) p_{\Theta}(\theta)  \\
+ & = \left( \prod \limits _{i=1}^n \theta^{x_i} (1 - \theta)^{1 - x_i} \right) \theta^{\beta_1 - 1} (1 - \theta)^{\beta_2 - 1} \\
+ & = \theta^{\beta_1 - 1 + \sum \limits _{i=1}^n x_i} (1 - \theta)^{\beta_2 - 1 + n - \sum \limits _{i=1}^n x_i} \\
+\end{align*}
+\vspace{20pt}
+
+We recognize that $\Theta \,|\, x_1, \dots, x_n$ is another beta distribution $Beta(\beta_1 + \sum \limits _{i=1}^n x_i, \beta_2  + n - \sum \limits _{i=1}^n x_i)$ with mean and variance
+\vspace{10pt}
+\begin{align*}
+E(\Theta \,|\, x_1, \dots, x_n) & =  \frac{\beta_1 + \sum \limits _{i=1}^n x_i}{\beta_1 + \sum \limits _{i=1}^n x_i + \beta_2 + n - \sum \limits _{i=1}^n x_i} \\
+ & = \frac{\beta_1 + \sum \limits _{i=1}^n x_i}{\beta_1 + \beta_2 + n} \\
+ & = \frac{\beta_1}{\beta_1 + \beta_2 + n} + \frac{\sum \limits _{i=1}^n x_i}{\beta_1 + \beta_2 + n} \\
+\\
+var(\Theta \,|\, x_1, \dots, x_n) & = \frac{(\beta_1 + \sum \limits _{i=1}^n x_i)(\beta_2 + n - \sum \limits _{i=1}^n x_i)}{(\beta_1 + \beta_2 + n + 1)(\beta_1 + \beta_2 + n)^2} \\
+\end{align*}
+\vfill
+\pagebreak
+
+One can sees two nice things that hint at reconciliation between frequentist approach and Bayesian approach
+\begin{enumerate}[1.]
+\item $E(\Theta \,|\, x_1, \dots, x_n)$ goes to the maximum likelihood estimate $\frac{\sum \limits _{i=1}^n x_i}{n}$ as the number of observations $n$ goes to $\infty$
+\item $var(\Theta \,|\, x_1, \dots, x_n)$ goes to 0 as the number of observations goes to $\infty$, hence $\Theta \,|\, x_1, \dots, x_n$ is concentrated around the maximum likelihood estimate
+\end{enumerate}
+\vfill
+\pagebreak
+
+One can see another nice thing when $E(\Theta \,|\, x_1, \dots, x_n)$ is written as the following convex sum
+\vspace{10pt}
+\begin{align*}
+E(\Theta \,|\, x_1, \dots, x_n) & = \left( \frac{\beta_1 + \beta_2}{\beta_1 + \beta_2 + n} \right) \frac{\beta_1}{\beta_1 + \beta_2} + \left( 1 - \frac{\beta_1 + \beta_2}{\beta_1 + \beta_2 + n} \right) \frac{\sum \limits _{i=1}^n x_i}{n} \\
+\\
+ & = a E(\Theta) + (1 - a) \bar{x} \\
+\\
+ & =  a \text{ prior belief } + (1 - a)\text{ present reality}
+\end{align*}
+which goes to present reality as $n$ goes to $\infty$.
+\vfill
+\pagebreak
+
+Updating to the next observation $x_{n+1}$ is straightforward
+\vspace{10pt}
+\begin{align*}
+\Theta \,|\, x_, \dots, x_n, x_{n+1} & \text{ is } Beta(\beta_1 + \sum \limits _{i=1}^{n+1} x_i, \beta_2  + n + 1 - \sum \limits _{i=1}^{n + 1} x_i) \\
+ & \textnormal{ is } Beta(\beta_1 + \sum \limits _{i=1}^n x_i + x_{n + 1}, \beta_2  + n - \sum \limits _{i=1}^n x_i + 1 - x_{n + 1}) \\
+\end{align*}
+\vfill
+\pagebreak
+
+Prediction of observations is closed-form
+\vspace{10pt}
+\begin{align*}
+p_{X \,|\, \Theta, x_1, \dots, x_n} (1) & = \frac{\beta_1 + \sum \limits _{i=1}^n x_i}{\beta_1 + \beta_2 + n} \\
+\\
+p_{X \,|\, \Theta, x_1, \dots, x_n} (0) & = 1 - p_{X \,|\, \Theta, x_1, \dots, x_n} (1) \\
+\end{align*}
+\vfill
+\pagebreak
+
+\subsection{Multinoulli likelihood} similar holds
+\vfill
+\pagebreak
+
+\subsection{Poisson likelihood} similar holds
+\vfill
+\pagebreak
+
+\subsection{Gaussian likelihood} similar holds
+\vfill
+\pagebreak
+
+\subsection{Exponential likelihood} similar holds for any likelihood $X$ whose probability mass function or probability density function has this canonical form
+\vspace{10pt}
+$$p_X(x) = h(x) e^{\langle \Theta, T(x) \rangle - A(\Theta)}$$
+\vspace{10pt}
+
+\noindent
+where $h, T, A$ are functions.
+\vspace{10pt}
+\begin{itemize}
+\item $\Theta$ is called canonical parameter
+\item $T(x)$ is called sufficient statistic
+\item $A(\Theta)$ is called cumulant function
+\end{itemize}
+\vfill
+\pagebreak
+
+\begin{exercise} Show that Bernoulli distribution is an exponential distribution.
+\end{exercise}
+
+\begin{remark} As we treat $X(\Theta)$ as a distribution with parameter $\Theta$ and treat $\Theta(\alpha)$ as a distribution with parameter $\alpha$, we could continue to treat $\alpha(\beta)$ as a distribution with parameter and so on. But at some point, we have to stop and treat the parameter as a number. Similarly in math, complex theorems are derived from theorems, and theorems are derived from simpler theorems, and so on. But at some point, simplest theorems are derived from axioms, that are taken to be true and serve as building blocks. 
+\end{remark}
+
+\newpage
+\begin{bibdiv}
+\begin{biblist}
+\bibselect{references}
+\end{biblist}
+\end{bibdiv}
+
+\end{document}
