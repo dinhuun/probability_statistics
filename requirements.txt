@@ -1,0 +1,7 @@
+bayesian-optimization
+jupyter
+matplotlib
+numpy
+pandas
+seaborn
+scipy==1.7.3  # unbound when BayesianOptimization issue 300: Error with scipy 1.8.0 resolves
