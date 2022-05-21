@@ -1,6 +1,7 @@
 bayesian-optimization
 jupyter
 matplotlib
+more-itertools
 numpy
 pandas
 recordclass
